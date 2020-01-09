@@ -6,7 +6,7 @@ class CustomRaisedButton extends StatelessWidget {
     this.child,
     this.color,
     this.borderRadius: 4.0,
-    this.height = 600.0,
+    this.height: 50,
     this.onPressed,
   });
   final Widget child;
@@ -18,7 +18,7 @@ class CustomRaisedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height,
+      height: 49,
           child: RaisedButton(
         child: child,
         color: color,
