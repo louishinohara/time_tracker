@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
-
+import 'dart:async';
 import 'package:time_tracker/common_widgets/custom_raised_button.dart';
 import './sign_in_button.dart';
 import './social_sign_in_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInPage extends StatelessWidget {
+  SignInPage({@required this.onSignIn});
+  final Function(FirebaseUser) onSignIn;
+
+  Future<void> _signInAnonymously() async {
+    // Sending a request to firebase to authenticate
+    try {
+      final authResult = await FirebaseAuth.instance
+          .signInAnonymously(); // Sign in anonymously returns a future which returns a box with a value which won't be available immediately
+      onSignIn(authResult.user);
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
+  }
+
   // Creating a new class for the main.dart
   @override
   Widget build(BuildContext context) {
@@ -74,7 +91,7 @@ class SignInPage extends StatelessWidget {
             text: 'Go Anonymously',
             textColor: Colors.white,
             color: Colors.black45,
-            onPressed: () {},
+            onPressed: _signInAnonymously,
           ),
         ],
       ),

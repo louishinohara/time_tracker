@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './app/sign_in/sign_in_page.dart';
+import './app/landing_page.dart';
 
 void main() {         // Entry point of the program
   runApp(MyApp());    // Used to run the app
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {     // Class which is called in main. Stat
       theme: ThemeData(                   // Defines many visual properties for the app (default values for app)
         primarySwatch: Colors.indigo,     // Primary color of the theme for the app
       ),
-      home: SignInPage(),                 // Calling another class for the home of the app
+      home: LandingPage(),                 // Calling another class for the home of the app
     );
   }
 }
