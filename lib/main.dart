@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_tracker/services/auth.dart';
 
 import './app/landing_page.dart';
 
@@ -14,7 +15,9 @@ class MyApp extends StatelessWidget {     // Class which is called in main. Stat
       theme: ThemeData(                   // Defines many visual properties for the app (default values for app)
         primarySwatch: Colors.indigo,     // Primary color of the theme for the app
       ),
-      home: LandingPage(),                 // Calling another class for the home of the app
+      home: LandingPage(
+        auth: Auth(),
+      ),                 // Calling another class for the home of the app
     );
   }
 }
