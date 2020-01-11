@@ -7,6 +7,7 @@ class User {
 }
 
 abstract class AuthBase {
+  Stream<User> get onAuthStateChanged;
   Future<User> currentUser();
   Future<User> signInAnonymously();
   Future<void> signOut();
@@ -22,6 +23,14 @@ class Auth implements AuthBase {
     }
     return User(uid: user.uid);
   }
+
+
+// Not really sure what is going on here
+  @override
+  Stream<User> get onAuthStateChanged {                             // Stream for auth class. Declaring new getter variable for class
+    return _firebaseAuth.onAuthStateChanged.map(_userFromFirebase); // Convert from type firebaseUser to user
+  }
+
   @override
   Future<User> currentUser() async {
     // Method to get the current user in case they are reloading the app
