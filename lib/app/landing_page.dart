@@ -9,7 +9,7 @@ class LandingPage extends StatelessWidget {
   final AuthBase auth;
 
 // Use strema builder to get rid of state management code
-  @override
+  @override // :)
   Widget build(BuildContext context) {
     return StreamBuilder<User>(
         stream: auth.onAuthStateChanged,
