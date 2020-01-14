@@ -21,6 +21,17 @@ class SignInPage extends StatelessWidget {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    // Sending a request to firebase to authenticate
+    try {
+      await auth.signInWithGoogle(); // Sign in anonymously returns a future which returns a box with a value which won't be available immediately
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
+  }
+
   // Creating a new class for the main.dart
   @override
   Widget build(BuildContext context) {
@@ -59,7 +70,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with Google',
             textColor: Colors.black87,
             color: Colors.white,
-            onPressed: () {},
+            onPressed: _signInWithGoogle,
           ),
           SizedBox(height: 8.0),
           SocialSignInButton(
