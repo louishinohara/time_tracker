@@ -24,7 +24,18 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInWithGoogle() async {
     // Sending a request to firebase to authenticate
     try {
-      await auth.signInWithGoogle(); // Sign in anonymously returns a future which returns a box with a value which won't be available immediately
+      await auth.signInWithGoogle();
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
+  }
+
+  Future<void> _signInWithFacebook() async {
+    // Sending a request to firebase to authenticate
+    try {
+      await auth.signInWithFacebook();
     } catch (e) {
       print(
         e.toString(),
@@ -78,7 +89,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with Facebook',
             textColor: Colors.white,
             color: Color(0xFF334D92),
-            onPressed: () {},
+            onPressed: _signInWithFacebook,
           ),
           SizedBox(height: 8.0),
           SocialSignInButton(
