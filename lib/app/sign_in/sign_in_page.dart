@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker/app/sign_in/email_sign_in_page.dart';
+import 'package:time_tracker/app/sign_in/sign_in_bloc.dart';
 import 'package:time_tracker/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker/services/auth.dart';
 import 'dart:async';
 import './social_sign_in_button.dart';
 import 'package:flutter/services.dart';
 
-class SignInPage extends StatefulWidget {
-  @override
-  _SignInPageState createState() => _SignInPageState();
-}
+class SignInPage extends StatelessWidget {
+  const SignInPage({Key key, @required this.bloc}) : super(key: key);
+  final SignInBloc bloc;
 
-class _SignInPageState extends State<SignInPage> {
-  bool _isLoading = false;
+  static Widget create(BuildContext context // Might need listen.false
+      ) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+    return Provider<SignInBloc>(
+      create: (_) => SignInBloc(auth: auth),    ////////////// DONT KNOW IF AUTH: AUTH IS NEEDED
+      dispose: (context, bloc) => bloc.dispose(),
+      child: Consumer<SignInBloc>(
+        builder: (context, bloc, _) => SignInPage(bloc: bloc),
+      ),
+    );
+  }
 
   void _showSignInError(BuildContext context, PlatformException exception) {
     PlatformExceptionAlertDialog(
@@ -25,46 +34,36 @@ class _SignInPageState extends State<SignInPage> {
   Future<void> _signInAnonymously(BuildContext context) async {
     // Sending a request to firebase to authenticate
     try {
-      setState(() => _isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth
+      // final auth = Provider.of<AuthBase>(context, listen: false);
+      await bloc
           .signInAnonymously(); // Sign in anonymously returns a future which returns a box with a value which won't be available immediately
 
     } on PlatformException catch (e) {
       _showSignInError(context, e);
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     // Sending a request to firebase to authenticate
     try {
-      setState(() => _isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithGoogle();
+      // final auth = Provider.of<AuthBase>(context, listen: false);
+      await bloc.signInWithGoogle();
     } on PlatformException catch (e) {
       if (e.code != "ERROR_ABORTED_BY_USER") {
         _showSignInError(context, e);
       }
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     // Sending a request to firebase to authenticate
     try {
-      setState(() => _isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithFacebook();
-      setState(() => _isLoading = false);
+      // final auth = Provider.of<AuthBase>(context, listen: false);
+      await bloc.signInWithFacebook();
     } on PlatformException catch (e) {
       if (e.code != "ERROR_ABORTED_BY_USER") {
         _showSignInError(context, e);
       }
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
@@ -86,12 +85,17 @@ class _SignInPageState extends State<SignInPage> {
         title: Text('Time Tracker'), // Text displayed on app bar
         elevation: 2,
       ),
-      body: _buildContent(context),
+      body: StreamBuilder<bool>(
+          stream: bloc.isLoadingStream,
+          initialData: false,
+          builder: (context, snapshot) {
+            return _buildContent(context, snapshot.data);
+          }),
       backgroundColor: Colors.grey[100],
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, bool isLoading) {
     // Set return type to be a widget
     return Padding(
       padding: EdgeInsets.all(16),
@@ -103,7 +107,7 @@ class _SignInPageState extends State<SignInPage> {
           // A column has children which is a list of widgets
           SizedBox(
             height: 50,
-            child: _buildHeader(),
+            child: _buildHeader(isLoading),
           ),
 
           SizedBox(height: 48),
@@ -112,7 +116,7 @@ class _SignInPageState extends State<SignInPage> {
             text: 'Sign in with Google',
             textColor: Colors.black87,
             color: Colors.white,
-            onPressed:  _isLoading ? null : ()=> _signInWithGoogle(context),
+            onPressed: isLoading ? null : () => _signInWithGoogle(context),
           ),
           SizedBox(height: 8.0),
           SocialSignInButton(
@@ -120,7 +124,8 @@ class _SignInPageState extends State<SignInPage> {
             text: 'Sign in with Facebook',
             textColor: Colors.white,
             color: Color(0xFF334D92),
-            onPressed: () => _isLoading ? null : ()=>  _signInWithFacebook(context),
+            onPressed: () =>
+                isLoading ? null : () => _signInWithFacebook(context),
           ),
           SizedBox(height: 8.0),
           SocialSignInButton(
@@ -128,7 +133,7 @@ class _SignInPageState extends State<SignInPage> {
             text: 'Sign in with Email',
             textColor: Colors.white,
             color: Colors.teal[700],
-            onPressed: _isLoading ? null : ()=> _signInWithEmail(context),
+            onPressed: isLoading ? null : () => _signInWithEmail(context),
           ),
           SizedBox(height: 8.0),
           Text('or',
@@ -143,15 +148,15 @@ class _SignInPageState extends State<SignInPage> {
             text: 'Go Anonymously',
             textColor: Colors.white,
             color: Colors.black45,
-            onPressed: _isLoading ? null : ()=>  _signInAnonymously(context),
+            onPressed: isLoading ? null : () => _signInAnonymously(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildHeader() {
-    if (_isLoading) {
+  Widget _buildHeader(bool isLoading) {
+    if (isLoading) {
       return Center(
         child: CircularProgressIndicator(),
       );
