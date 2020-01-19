@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker/common_widgets/platform_alert_dialog.dart';
 import 'package:time_tracker/services/auth.dart';
-import 'package:time_tracker/services/auth_provider.dart';
+
 
 class HomePage extends StatelessWidget {
 
   Future<void> _signOut(BuildContext context) async {
     // Sending a request to firebase to authenticate
     try {
-      final auth = AuthProvider.of(context);
+      final auth = Provider.of<AuthBase>(context, listen: false);
       await auth.signOut(); // Sign in anonymously returns a future which returns a box with a value which won't be available immediately
     } catch (e) {
       print(

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker/app/sign_in/email_sign_in_page.dart';
-import 'dart:async';
-import 'package:time_tracker/common_widgets/custom_raised_button.dart';
 import 'package:time_tracker/services/auth.dart';
-import 'package:time_tracker/services/auth_provider.dart';
-import './sign_in_button.dart';
+import 'dart:async';
 import './social_sign_in_button.dart';
 
 class SignInPage extends StatelessWidget {
@@ -12,7 +10,7 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInAnonymously(BuildContext context) async {
     // Sending a request to firebase to authenticate
     try {
-       final auth = AuthProvider.of(context);
+       final auth = Provider.of<AuthBase>(context, listen: false);
       await auth
           .signInAnonymously(); // Sign in anonymously returns a future which returns a box with a value which won't be available immediately
 
@@ -26,7 +24,7 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInWithGoogle(BuildContext context) async {
     // Sending a request to firebase to authenticate
     try {
-       final auth = AuthProvider.of(context);
+       final auth = Provider.of<AuthBase>(context, listen: false);
       await auth.signInWithGoogle();
     } catch (e) {
       print(
@@ -38,7 +36,7 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInWithFacebook(BuildContext context) async {
     // Sending a request to firebase to authenticate
     try {
-       final auth = AuthProvider.of(context);
+       final auth = Provider.of<AuthBase>(context, listen: false);
       await auth.signInWithFacebook();
     } catch (e) {
       print(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:time_tracker/services/auth.dart';
-import 'package:time_tracker/services/auth_provider.dart';
-
+import 'package:provider/provider.dart';
 import './app/landing_page.dart';
 
 void main() {
@@ -14,8 +13,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Stateless widgets need a build method
-    return AuthProvider(
-      auth: Auth(),
+    return Provider<AuthBase>(
+      create: (context) => Auth(),
       child: MaterialApp(
         // Body of the app
         title: 'Time Tracker',
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
         ),
         home: LandingPage(
         ), // Calling another class for the home of the app
-      ),
+      ), 
     );
   }
 }
