@@ -22,6 +22,7 @@ class FirestoreService {
 
   Stream<List<T>> collectionStream<T>({
     @required String path,
+<<<<<<< HEAD
     @required T builder(Map<String, dynamic> data, String documentID),
     Query queryBuilder(Query query),
     int sort(T lhs, T rhs),
@@ -50,5 +51,13 @@ class FirestoreService {
     final DocumentReference reference = Firestore.instance.document(path);
     final Stream<DocumentSnapshot> snapshots = reference.snapshots();
     return snapshots.map((snapshot) => builder(snapshot.data, snapshot.documentID));
+=======
+    @required T builder(Map<String, dynamic> data),
+  }) {
+    final reference = Firestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map((snapshot) =>
+        snapshot.documents.map((snapshot) => builder(snapshot.data)).toList());
+>>>>>>> parent of 91fac26... updates
   }
 }

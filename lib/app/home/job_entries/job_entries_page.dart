@@ -52,15 +52,13 @@ class JobEntriesPage extends StatelessWidget {
               elevation: 2.0,
               title: Text(jobName),
               actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.edit, color: Colors.white),
-                  onPressed: () =>
-                      EditJobPage.show(context, database: database, job: job),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add, color: Colors.white),
-                  onPressed: () => EntryPage.show(
-                    context: context,
+                FlatButton(
+                  child: Text(
+                    'Edit',
+                    style: TextStyle(fontSize: 18.0, color: Colors.white),
+                  ),
+                  onPressed: () => EditJobPage.show(
+                    context,
                     database: database,
                     job: job,
                   ),
@@ -68,6 +66,11 @@ class JobEntriesPage extends StatelessWidget {
               ],
             ),
             body: _buildContent(context, job),
+            floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () =>
+                EntryPage.show(context: context, database: database, job: job),
+          ),
           );
         });
   }
