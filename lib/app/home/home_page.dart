@@ -4,6 +4,7 @@ import 'package:time_tracker/app/home/jobs/jobs_page.dart';
 import 'package:time_tracker/app/home/tab_item.dart';
 
 import 'account/account_page.dart';
+import 'entries/entries_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   Map<TabItem, WidgetBuilder> get widgetBuilders {
     return {
       TabItem.jobs: (_) => JobsPage(),
-      TabItem.entries: (_) => Container(),
+      TabItem.entries: (context) => EntriesPage.create(context),
       TabItem.account: (_) => AccountPage(),
     };
   }
