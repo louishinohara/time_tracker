@@ -2,9 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:time_tracker/app/home/job_entries/job_entries_page.dart';
 
 import 'package:time_tracker/app/home/jobs/job_list_tile.dart';
+=======
+import 'package:time_tracker/app/home/jobs/add_job_page.dart';
+>>>>>>> parent of 91fac26... updates
 =======
 import 'package:time_tracker/app/home/jobs/add_job_page.dart';
 >>>>>>> parent of 91fac26... updates
@@ -14,10 +18,13 @@ import 'package:time_tracker/common_widgets/platform_exception_alert_dialog.dart
 import 'package:time_tracker/services/auth.dart';
 import 'package:time_tracker/services/database.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:flutter/services.dart';
 import 'edit_job_page.dart';
 import 'list_items_builder.dart';
 =======
+=======
+>>>>>>> parent of 91fac26... updates
 
 
 >>>>>>> parent of 91fac26... updates
@@ -49,6 +56,7 @@ class JobsPage extends StatelessWidget {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _delete(BuildContext context, Job job) async {
     try {
       final database = Provider.of<Database>(context, listen: false);
@@ -61,6 +69,9 @@ class JobsPage extends StatelessWidget {
       ).show(context);
     }
   }
+=======
+
+>>>>>>> parent of 91fac26... updates
 =======
 
 >>>>>>> parent of 91fac26... updates
@@ -131,6 +142,9 @@ class JobsPage extends StatelessWidget {
           return Center(child: Text('Some error occured'));
         }
         return Center(child:CircularProgressIndicator());
+<<<<<<< HEAD
+>>>>>>> parent of 91fac26... updates
+=======
 >>>>>>> parent of 91fac26... updates
       },
     );
