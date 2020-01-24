@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:time_tracker/app/sign_in/email_sign_in_model.dart';
 import 'package:time_tracker/app/sign_in/validators.dart';
 import 'package:time_tracker/services/auth.dart';
@@ -19,20 +19,20 @@ class EmailSignInChangeModel with EmailAndPasswordValidators, ChangeNotifier {
   bool isLoading;
   bool submitted;
 
-  Future<void> submit() async {
+ Future<void> submit() async {
     updateWith(submitted: true, isLoading: true);
     try {
       if (formType == EmailSignInFormType.signIn) {
         await auth.signInWithEmailAndPassword(email, password);
       } else {
-        await auth.createUserWithEmailAndPassword(email, password);
+        await auth.createUserWithEmailAndPassword(
+            email, password);
       }
     } catch (e) {
       updateWith(isLoading: false);
       rethrow;
-    }
+    } 
   }
-
   String get primaryButtonText {
     return formType == EmailSignInFormType.signIn
         ? 'Sign in'
@@ -42,7 +42,7 @@ class EmailSignInChangeModel with EmailAndPasswordValidators, ChangeNotifier {
   String get secondaryButtonText {
     return formType == EmailSignInFormType.signIn
         ? 'Need an account? Register'
-        : 'Have an account? Sign in';
+        : "Have an account? Sign in";
   }
 
   bool get canSubmit {
@@ -57,11 +57,11 @@ class EmailSignInChangeModel with EmailAndPasswordValidators, ChangeNotifier {
   }
 
   String get emailErrorText {
-    bool showErrorText = submitted && !emailValidator.isValid(email);
+    bool showErrorText = submitted && emailValidator.isValid(email);
     return showErrorText ? invalidEmailErrorText : null;
   }
 
-  void toggleFormType() {
+   void toggleFormType() {
     final formType = this.formType == EmailSignInFormType.signIn
         ? EmailSignInFormType.register
         : EmailSignInFormType.signIn;
@@ -85,11 +85,13 @@ class EmailSignInChangeModel with EmailAndPasswordValidators, ChangeNotifier {
     bool isLoading,
     bool submitted,
   }) {
-    this.email = email ?? this.email;
-    this.password = password ?? this.password;
-    this.formType = formType ?? this.formType;
-    this.isLoading = isLoading ?? this.isLoading;
-    this.submitted = submitted ?? this.submitted;
-    notifyListeners();
+    
+      this.email = email ?? this.email;
+      this.password = password ?? this.password;
+      this.formType = formType ?? this.formType;
+      this.isLoading = isLoading ?? this.isLoading;
+      this.submitted = submitted ?? this.submitted;
+      notifyListeners();
+    
   }
 }

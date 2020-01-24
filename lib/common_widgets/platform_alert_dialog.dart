@@ -8,8 +8,8 @@ class PlatformAlertDialog extends PlatformWidget {
   PlatformAlertDialog({
     @required this.title,
     @required this.content,
-    this.cancelActionText,
     @required this.defaultActionText,
+    this.cancelActionText,
   })  : assert(title != null),
         assert(content != null),
         assert(defaultActionText != null);
@@ -22,12 +22,10 @@ class PlatformAlertDialog extends PlatformWidget {
   Future<bool> show(BuildContext context) async {
     return Platform.isIOS
         ? await showCupertinoDialog<bool>(
-            context: context,
-            builder: (context) => this,
-          )
+            context: context, builder: (context) => this)
         : await showDialog<bool>(
             context: context,
-            barrierDismissible: false,
+            barrierDismissible: true,
             builder: (context) => this,
           );
   }
@@ -74,7 +72,6 @@ class PlatformAlertDialogAction extends PlatformWidget {
   PlatformAlertDialogAction({this.child, this.onPressed});
   final Widget child;
   final VoidCallback onPressed;
-
   @override
   Widget buildCupertinoWidget(BuildContext context) {
     return CupertinoDialogAction(

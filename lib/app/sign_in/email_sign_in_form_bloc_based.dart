@@ -1,37 +1,40 @@
+import "package:flutter/cupertino.dart";
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:time_tracker/app/sign_in/email_sign_in_bloc.dart';
-import 'package:time_tracker/app/sign_in/email_sign_in_model.dart';
+import 'package:flutter/services.dart';
+import 'package:time_tracker/app/sign_in/validators.dart';
 import 'package:time_tracker/common_widgets/form_submit_button.dart';
 import 'package:time_tracker/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker/services/auth.dart';
 
-class EmailSignInFormBlocBased extends StatefulWidget {
+import 'email_sign_in_bloc.dart';
+import 'email_sign_in_model.dart';
+
+class EmailSignInFormBlocBased extends StatefulWidget
+    with EmailAndPasswordValidators {
   EmailSignInFormBlocBased({@required this.bloc});
   final EmailSignInBloc bloc;
-
   static Widget create(BuildContext context) {
     final AuthBase auth = Provider.of<AuthBase>(context,listen: false);
     return Provider<EmailSignInBloc>(
-      create: (context) => EmailSignInBloc(auth: auth),
+      create: (content) => EmailSignInBloc(auth: auth),
       child: Consumer<EmailSignInBloc>(
-        builder: (context, bloc, _) => EmailSignInFormBlocBased(bloc: bloc),
-      ),
+          builder: (context, bloc, _) => EmailSignInFormBlocBased(bloc: bloc)),
       dispose: (context, bloc) => bloc.dispose(),
     );
   }
 
   @override
-  _EmailSignInFormBlocBasedState createState() =>
-      _EmailSignInFormBlocBasedState();
+  _EmailSignInFormState createState() => _EmailSignInFormState();
 }
 
-class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
+class _EmailSignInFormState extends State<EmailSignInFormBlocBased> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+
 
   @override
   void dispose() {
@@ -45,16 +48,18 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
   Future<void> _submit() async {
     try {
       await widget.bloc.submit();
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(); // Remove sign in page if successful
     } on PlatformException catch (e) {
       PlatformExceptionAlertDialog(
+        // Shows error when signing in
         title: 'Sign in failed',
         exception: e,
       ).show(context);
-    }
+    } 
   }
 
   void _emailEditingComplete(EmailSignInModel model) {
+    // Moves cursor to the next text field
     final newFocus = model.emailValidator.isValid(model.email)
         ? _passwordFocusNode
         : _emailFocusNode;
@@ -62,6 +67,7 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
   }
 
   void _toggleFormType() {
+    // Clear form field when switching from sign in to create account
     widget.bloc.toggleFormType();
     _emailController.clear();
     _passwordController.clear();
@@ -70,18 +76,18 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
   List<Widget> _buildChildren(EmailSignInModel model) {
     return [
       _buildEmailTextField(model),
-      SizedBox(height: 8.0),
+      SizedBox(height: 8),
       _buildPasswordTextField(model),
-      SizedBox(height: 8.0),
+      SizedBox(height: 8),
       FormSubmitButton(
         text: model.primaryButtonText,
         onPressed: model.canSubmit ? _submit : null,
       ),
-      SizedBox(height: 8.0),
+      SizedBox(height: 8),
       FlatButton(
         child: Text(model.secondaryButtonText),
-        onPressed: !model.isLoading ? _toggleFormType : null,
-      ),
+        onPressed: !model.isLoading ? _toggleFormType: null,
+      )
     ];
   }
 
@@ -96,7 +102,7 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
       ),
       obscureText: true,
       textInputAction: TextInputAction.done,
-      onChanged: widget.bloc.updatePassword,
+      onChanged: (password) => widget.bloc.updatePassword,
       onEditingComplete: _submit,
     );
   }
@@ -106,15 +112,15 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
       controller: _emailController,
       focusNode: _emailFocusNode,
       decoration: InputDecoration(
-        labelText: 'Email',
-        hintText: 'test@test.com',
+        labelText: "Email",
+        hintText: "test@text.com",
         errorText: model.emailErrorText,
         enabled: model.isLoading == false,
       ),
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
-      onChanged: widget.bloc.updateEmail,
+      onChanged: (email) => widget.bloc.updateEmail,
       onEditingComplete: () => _emailEditingComplete(model),
     );
   }
@@ -122,18 +128,21 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<EmailSignInModel>(
-        stream: widget.bloc.modelStream,
-        initialData: EmailSignInModel(),
-        builder: (context, snapshot) {
-          final EmailSignInModel model = snapshot.data;
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: _buildChildren(model),
-            ),
-          );
-        });
+      stream: widget.bloc.modelStream,
+      initialData: EmailSignInModel(),
+      builder: (context, snapshot) {
+        final EmailSignInModel model = snapshot.data;
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: _buildChildren(model),
+          ),
+        );
+      }
+    );
   }
+
+
 }

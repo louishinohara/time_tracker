@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomRaisedButton extends StatelessWidget {
+  // Properties in stateless widget must be immutable
   CustomRaisedButton({
     this.child,
     this.color,
-    this.borderRadius: 2.0,
-    this.height: 50.0,
+    this.borderRadius: 4.0,
+    this.height: 50,
     this.onPressed,
-  }) : assert(borderRadius != null);
+  });
   final Widget child;
   final Color color;
   final double borderRadius;
@@ -17,8 +18,8 @@ class CustomRaisedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height,
-      child: RaisedButton(
+      height: 49,
+          child: RaisedButton(
         child: child,
         color: color,
         disabledColor: color,
@@ -27,7 +28,8 @@ class CustomRaisedButton extends StatelessWidget {
             Radius.circular(borderRadius),
           ),
         ),
-        onPressed: onPressed,
+        onPressed:
+            onPressed, // () => Paramter/Function and {} is code written (to do)
       ),
     );
   }

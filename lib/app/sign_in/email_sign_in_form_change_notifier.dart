@@ -1,17 +1,21 @@
+import "package:flutter/cupertino.dart";
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:time_tracker/app/sign_in/email_sign_in_change_model.dart';
+import 'package:flutter/services.dart';
 import 'package:time_tracker/common_widgets/form_submit_button.dart';
 import 'package:time_tracker/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker/services/auth.dart';
+
+import 'email_sign_in_change_model_.dart';
+
 
 class EmailSignInFormChangeNotifier extends StatefulWidget {
   EmailSignInFormChangeNotifier({@required this.model});
   final EmailSignInChangeModel model;
 
   static Widget create(BuildContext context) {
-    final AuthBase auth = Provider.of<AuthBase>(context,listen:false);
+    final AuthBase auth = Provider.of<AuthBase>(context, listen: false);
     return ChangeNotifierProvider<EmailSignInChangeModel>(
       create: (context) => EmailSignInChangeModel(auth: auth),
       child: Consumer<EmailSignInChangeModel>(
@@ -22,20 +26,14 @@ class EmailSignInFormChangeNotifier extends StatefulWidget {
   }
 
   @override
-  _EmailSignInFormChangeNotifierState createState() =>
-      _EmailSignInFormChangeNotifierState();
+  _EmailSignInFormState createState() => _EmailSignInFormState();
 }
 
-class _EmailSignInFormChangeNotifierState
-    extends State<EmailSignInFormChangeNotifier> {
+class _EmailSignInFormState extends State<EmailSignInFormChangeNotifier> {
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
-
   final FocusNode _emailFocusNode = FocusNode();
-
   final FocusNode _passwordFocusNode = FocusNode();
-
   EmailSignInChangeModel get model => widget.model;
 
   @override
@@ -50,16 +48,18 @@ class _EmailSignInFormChangeNotifierState
   Future<void> _submit() async {
     try {
       await model.submit();
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(); // Remove sign in page if successful
     } on PlatformException catch (e) {
       PlatformExceptionAlertDialog(
+        // Shows error when signing in
         title: 'Sign in failed',
         exception: e,
       ).show(context);
     }
   }
 
-  void _emailEditingComplete() {
+  void _emailEditingComplete( ) {
+    // Moves cursor to the next text field
     final newFocus = model.emailValidator.isValid(model.email)
         ? _passwordFocusNode
         : _emailFocusNode;
@@ -67,30 +67,31 @@ class _EmailSignInFormChangeNotifierState
   }
 
   void _toggleFormType() {
+    // Clear form field when switching from sign in to create account
     model.toggleFormType();
     _emailController.clear();
     _passwordController.clear();
   }
 
-  List<Widget> _buildChildren() {
+  List<Widget> _buildChildren( ) {
     return [
       _buildEmailTextField(),
-      SizedBox(height: 8.0),
+      SizedBox(height: 8),
       _buildPasswordTextField(),
-      SizedBox(height: 8.0),
+      SizedBox(height: 8),
       FormSubmitButton(
         text: model.primaryButtonText,
         onPressed: model.canSubmit ? _submit : null,
       ),
-      SizedBox(height: 8.0),
+      SizedBox(height: 8),
       FlatButton(
         child: Text(model.secondaryButtonText),
         onPressed: !model.isLoading ? _toggleFormType : null,
-      ),
+      )
     ];
   }
 
-  TextField _buildPasswordTextField() {
+  TextField _buildPasswordTextField( ) {
     return TextField(
       controller: _passwordController,
       focusNode: _passwordFocusNode,
@@ -106,13 +107,13 @@ class _EmailSignInFormChangeNotifierState
     );
   }
 
-  TextField _buildEmailTextField() {
+  TextField _buildEmailTextField( ) {
     return TextField(
       controller: _emailController,
       focusNode: _emailFocusNode,
       decoration: InputDecoration(
-        labelText: 'Email',
-        hintText: 'test@test.com',
+        labelText: "Email",
+        hintText: "test@text.com",
         errorText: model.emailErrorText,
         enabled: model.isLoading == false,
       ),
@@ -126,13 +127,13 @@ class _EmailSignInFormChangeNotifierState
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: _buildChildren(),
-      ),
-    );
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: _buildChildren(),
+            ),
+          );
   }
 }
