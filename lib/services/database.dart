@@ -53,7 +53,6 @@ class FirestoreDatabase implements Database {
   Stream<List<Job>> jobsStream() => _service.collectionStream(
         path: APIPath.jobs(uid),
 <<<<<<< HEAD
-<<<<<<< HEAD
         builder: (data, documentId) => Job.fromMap(data, documentId),
       );
 
@@ -76,9 +75,6 @@ class FirestoreDatabase implements Database {
             : null,
         builder: (data, documentID) => Entry.fromMap(data, documentID),
         sort: (lhs, rhs) => rhs.start.compareTo(lhs.start),
-=======
-        builder: (data) => Job.fromMap(data),
->>>>>>> parent of 91fac26... updates
 =======
         builder: (data) => Job.fromMap(data),
 >>>>>>> parent of 91fac26... updates
