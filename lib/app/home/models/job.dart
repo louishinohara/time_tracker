@@ -6,14 +6,13 @@ class Job {
   final String name;
   final int ratePerHour;
 
-  factory Job.fromMap(Map<String,dynamic>data,String documentId){
+  factory Job.fromMap(Map<String,dynamic>data){
     if (data == null) {
       return null;
     }
     final String name = data['name'];
     final int ratePerHour = data['ratePerHour'];
     return Job(
-      id: documentId,
       name: name,
       ratePerHour: ratePerHour,
     );
