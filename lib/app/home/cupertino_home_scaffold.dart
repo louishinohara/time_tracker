@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'tab_item.dart';
+import 'package:flutter/material.dart';
+import 'package:time_tracker/app/home/jobs/jobs_page.dart';
+import 'package:time_tracker/app/home/tab_item.dart';
 
 class CupertinoHomeScaffold extends StatelessWidget {
   const CupertinoHomeScaffold({
@@ -12,8 +13,8 @@ class CupertinoHomeScaffold extends StatelessWidget {
 
   final TabItem currentTab;
   final ValueChanged<TabItem> onSelectTab;
-  final Map<TabItem,WidgetBuilder> widgetBuilders;
-  
+  final Map<TabItem, WidgetBuilder> widgetBuilders;
+
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
@@ -28,19 +29,24 @@ class CupertinoHomeScaffold extends StatelessWidget {
       tabBuilder: (context, index) {
         final item = TabItem.values[index];
         return CupertinoTabView(
-          builder: (context) => widgetBuilders[item] (context),
+          builder: (context) => widgetBuilders[item](context),
         );
       },
     );
   }
 
-  // Bottom Navigation Bar
   BottomNavigationBarItem _buildItem(TabItem tabItem) {
     final itemData = TabItemData.allTabs[tabItem];
     final color = currentTab == tabItem ? Colors.indigo : Colors.grey;
     return BottomNavigationBarItem(
-      icon: Icon(itemData.icon, color: color),
-      title: Text(itemData.title, style: TextStyle(color: color)),
+      icon: Icon(
+        itemData.icon,
+        color: color,
+      ),
+      title: Text(
+        itemData.title,
+        style: TextStyle(color: color),
+      ),
     );
   }
 }

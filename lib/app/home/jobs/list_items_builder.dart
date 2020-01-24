@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-
-import 'empty_contents.dart';
+import 'package:time_tracker/app/home/jobs/empty_content.dart';
 
 typedef ItemWidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
 class ListItemsBuilder<T> extends StatelessWidget {
-  const ListItemsBuilder(
-      {Key key, @required this.snapshot, @required this.itemBuilder})
-      : super(key: key);
+  const ListItemsBuilder({
+    Key key,
+    @required this.snapshot,
+    @required this.itemBuilder,
+  }) : super(key: key);
   final AsyncSnapshot<List<T>> snapshot;
   final ItemWidgetBuilder<T> itemBuilder;
 

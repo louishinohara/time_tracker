@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:time_tracker/services/auth.dart';
 import 'package:provider/provider.dart';
-import './app/landing_page.dart';
+import 'package:time_tracker/app/landing_page.dart';
+import 'package:time_tracker/services/auth.dart';
 
 void main() {
-  // Entry point of the program
-  runApp(MyApp()); // Used to run the app
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // Class which is called in main. Stateless because values inside are immutable
   @override
   Widget build(BuildContext context) {
-    // Stateless widgets need a build method
     return Provider<AuthBase>(
       create: (context) => Auth(),
       child: MaterialApp(
-        // Body of the app
         title: 'Time Tracker',
         theme: ThemeData(
-          // Defines many visual properties for the app (default values for app)
-          primarySwatch:
-              Colors.indigo, // Primary color of the theme for the app
+          primarySwatch: Colors.indigo,
         ),
-        home: LandingPage(
-        ), // Calling another class for the home of the app
-      ), 
+        home: LandingPage(),
+      ),
     );
   }
 }

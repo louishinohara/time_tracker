@@ -23,13 +23,13 @@ class EmailSignInModel with EmailAndPasswordValidators {
   }
 
   String get secondaryButtonText {
-     return formType == EmailSignInFormType.signIn
+    return formType == EmailSignInFormType.signIn
         ? 'Need an account? Register'
-        : "Have an account? Sign in";
+        : 'Have an account? Sign in';
   }
 
   bool get canSubmit {
-     return emailValidator.isValid(email) &&
+    return emailValidator.isValid(email) &&
         passwordValidator.isValid(password) &&
         !isLoading;
   }
@@ -40,9 +40,10 @@ class EmailSignInModel with EmailAndPasswordValidators {
   }
 
   String get emailErrorText {
-    bool showErrorText = submitted && emailValidator.isValid(email);
+    bool showErrorText = submitted && !emailValidator.isValid(email);
     return showErrorText ? invalidEmailErrorText : null;
   }
+
   EmailSignInModel copyWith({
     String email,
     String password,

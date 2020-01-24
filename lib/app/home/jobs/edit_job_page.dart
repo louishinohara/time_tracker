@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import 'package:time_tracker/app/home/models/job.dart';
 import 'package:time_tracker/common_widgets/platform_alert_dialog.dart';
 import 'package:time_tracker/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker/services/database.dart';
-import 'package:flutter/services.dart';
 
 class EditJobPage extends StatefulWidget {
-  const EditJobPage({Key key, @required this.database, this.job}) : super(key: key);
+  const EditJobPage({Key key, @required this.database, this.job})
+      : super(key: key);
   final Database database;
   final Job job;
 
-  static Future<void> show(BuildContext context, {Job job}) async {
-    final database = Provider.of<Database>(context, listen: false);
+  static Future<void> show(
+    BuildContext context, {
+    Database database,
+    Job job,
+  }) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => EditJobPage(database: database,job:job),
+        builder: (context) => EditJobPage(database: database, job: job),
         fullscreenDialog: true,
       ),
     );
@@ -27,23 +30,21 @@ class EditJobPage extends StatefulWidget {
 
 class _EditJobPageState extends State<EditJobPage> {
   final _formKey = GlobalKey<FormState>();
+
   String _name;
   int _ratePerHour;
 
-  @override 
+  @override
   void initState() {
     super.initState();
-    if(widget.job != null) {
+    if (widget.job != null) {
       _name = widget.job.name;
       _ratePerHour = widget.job.ratePerHour;
     }
   }
 
-
-
   bool _validateAndSaveForm() {
     final form = _formKey.currentState;
-
     if (form.validate()) {
       form.save();
       return true;
@@ -52,7 +53,6 @@ class _EditJobPageState extends State<EditJobPage> {
   }
 
   Future<void> _submit() async {
-    // Page that allows the form to pop up
     if (_validateAndSaveForm()) {
       try {
         final jobs = await widget.database.jobsStream().first;
@@ -74,7 +74,6 @@ class _EditJobPageState extends State<EditJobPage> {
         }
       } on PlatformException catch (e) {
         PlatformExceptionAlertDialog(
-          // Shows error when signing in
           title: 'Operation failed',
           exception: e,
         ).show(context);
@@ -95,7 +94,7 @@ class _EditJobPageState extends State<EditJobPage> {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             onPressed: _submit,
-          )
+          ),
         ],
       ),
       body: _buildContents(),
@@ -117,8 +116,7 @@ class _EditJobPageState extends State<EditJobPage> {
     );
   }
 
-  _buildForm() {
-    // UI design for form
+  Widget _buildForm() {
     return Form(
       key: _formKey,
       child: Column(
@@ -129,7 +127,6 @@ class _EditJobPageState extends State<EditJobPage> {
   }
 
   List<Widget> _buildFormChildren() {
-    // Form to enter job name and rate
     return [
       TextFormField(
         decoration: InputDecoration(labelText: 'Job name'),
@@ -145,7 +142,7 @@ class _EditJobPageState extends State<EditJobPage> {
           decimal: false,
         ),
         onSaved: (value) => _ratePerHour = int.tryParse(value) ?? 0,
-      )
+      ),
     ];
   }
 }
