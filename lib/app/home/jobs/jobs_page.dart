@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:time_tracker/app/home/job_entries/job_entries_page.dart';
 
 import 'package:time_tracker/app/home/jobs/job_list_tile.dart';
 import 'package:time_tracker/app/home/models/job.dart';
@@ -60,10 +59,7 @@ class JobsPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add, color: Colors.white),
-            onPressed: () => EditJobPage.show(
-              context,
-              database: Provider.of<Database>(context, listen: false),
-            ),
+            onPressed: () => EditJobPage.show(context),
           ),
           FlatButton(
             child: Text(
@@ -95,7 +91,7 @@ class JobsPage extends StatelessWidget {
             onDismissed: (direction) => _delete(context, job),
             child: JobListTile(
               job: job,
-              onTap: () => JobEntriesPage.show(context, job),
+              onTap: () => EditJobPage.show(context, job: job),
             ),
           ),
         );

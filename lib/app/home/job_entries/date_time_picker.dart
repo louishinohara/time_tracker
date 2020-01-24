@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:time_tracker/app/home/job_entries/format.dart';
-
-import 'input_dropdown.dart';
-
+import 'package:time_tracker/app/home/job_entries/input_dropdown.dart';
 
 class DateTimePicker extends StatelessWidget {
   const DateTimePicker({
@@ -12,15 +10,15 @@ class DateTimePicker extends StatelessWidget {
     this.labelText,
     this.selectedDate,
     this.selectedTime,
-    this.onSelectedDate,
-    this.onSelectedTime,
+    this.selectDate,
+    this.selectTime,
   }) : super(key: key);
 
   final String labelText;
   final DateTime selectedDate;
   final TimeOfDay selectedTime;
-  final ValueChanged<DateTime> onSelectedDate;
-  final ValueChanged<TimeOfDay> onSelectedTime;
+  final ValueChanged<DateTime> selectDate;
+  final ValueChanged<TimeOfDay> selectTime;
 
   Future<void> _selectDate(BuildContext context) async {
     final pickedDate = await showDatePicker(
@@ -30,14 +28,14 @@ class DateTimePicker extends StatelessWidget {
       lastDate: DateTime(2100),
     );
     if (pickedDate != null && pickedDate != selectedDate) {
-      onSelectedDate(pickedDate);
+      selectDate(pickedDate);
     }
   }
 
   Future<void> _selectTime(BuildContext context) async {
     final pickedTime = await showTimePicker(context: context, initialTime: selectedTime);
     if (pickedTime != null && pickedTime != selectedTime) {
-      onSelectedTime(pickedTime);
+      selectTime(pickedTime);
     }
   }
 
